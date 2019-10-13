@@ -1,10 +1,12 @@
+/* Todo List Functions */
+
 let todoList = {
   todos: [],
   displayTodos: function() {
-    console.log("My Todos:");
     if (this.todos.length === 0) {
       console.log("Your todo list is empty!");
     } else {
+      console.log("My Todos: ");
       for (let i = 0; i < this.todos.length; i++) {
         if (this.todos[i].completed === true) {
           console.log("(x) " + this.todos[i].todoText);
@@ -58,7 +60,7 @@ let todoList = {
   }
 };
 
-let displayTodosButton = document.getElementById("displayTodosButton");
+/* let displayTodosButton = document.getElementById("displayTodosButton");
 let toggleAllButton = document.getElementById("toggleAllButton");
 
 displayTodosButton.addEventListener("click", function() {
@@ -66,25 +68,58 @@ displayTodosButton.addEventListener("click", function() {
 });
 toggleAllButton.addEventListener("click", function() {
   todoList.toggleAll();
-});
+}); */
 
+/* Event Handlers */
 let handlers = {
   displayTodos: function() {
     todoList.displayTodos();
+  },
+  addTodo: function() {
+    let addTodoTextInput = document.getElementById("addTodoTextInput");
+    todoList.addTodo(addTodoTextInput.value);
+    addTodoTextInput.value = "";
+  },
+  changeTodo: function() {
+    let changeTodoPositionInput = document.getElementById(
+      "changeTodoPositionInput"
+    );
+    let changeTodoTextInput = document.getElementById("changeTodoTextInput");
+    todoList.changeTodo(
+      changeTodoPositionInput.valueAsNumber,
+      changeTodoTextInput.value
+    );
+    changeTodoPositionInput.value = "";
+    changeTodoTextInput.value = "";
+  },
+  deleteTodo: function() {
+    let deleteTodoPositionInput = document.getElementById(
+      "deleteTodoPositionInput"
+    );
+    todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
+    deleteTodoPositionInput.value = "";
+  },
+  toggleCompleted: function() {
+    let toggleCompletedPositionInput = document.getElementById(
+      "toggleCompletedPositionInput"
+    );
+    todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
+    toggleCompletedPositionInput.value = "";
   },
   toggleAll: function() {
     todoList.toggleAll();
   }
 };
 
-/* todoList.displayTodos()
-  todoList.addTodo('item 1')
-  todoList.addTodo('item 2')
-  todoList.addTodo('item 3')
-  todoList.changeTodo(1, "new item 2")
-  todoList.toggleAll()
-  todoList.toggleAll()
-  todoList.toggleCompleted(1)
-  todoList.toggleAll()
-  todoList.toggleAll()
-  todoList.deleteTodo(1) */
+let view = {
+  displayTodos: function() {
+    let todosUl = document.querySelector("ul");
+    todosUl.innerHTML = "";
+
+    for (let i = 0; i < todoList.todos.length; i++) {
+      let todoLi = document.createElement("li");
+      todoLi.textContent = todoList.todos[i].todoText;
+      todosUl.appendChild(todoLi);
+    }
+  }
+};
