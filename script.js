@@ -40,20 +40,32 @@ let todoList = {
     let totalTodos = this.todos.length;
     let completedTodos = 0;
 
-    for (let i = 0; i < totalTodos; i++) {
+    /* for (let i = 0; i < totalTodos; i++) {
       if (this.todos[i].completed === true) {
         completedTodos++;
       }
-    }
+    } */
+
+    this.todos.forEach(function(todo) {
+      if (todo.completed === true) {
+        completedTodos++;
+      }
+    });
 
     if (completedTodos === totalTodos) {
-      for (let i = 0; i < totalTodos; i++) {
+      /*       for (let i = 0; i < totalTodos; i++) {
         this.todos[i].completed = false;
-      }
+      } */
+      this.todos.forEach(function(todo) {
+        todo.completed = false;
+      });
     } else {
-      for (let i = 0; i < totalTodos; i++) {
+      /*       for (let i = 0; i < totalTodos; i++) {
         this.todos[i].completed = true;
-      }
+      } */
+      this.todos.forEach(function(todo) {
+        todo.completed = true;
+      });
     }
   }
 };
@@ -102,7 +114,7 @@ let view = {
   displayTodos: function() {
     let todosUl = document.querySelector("ul");
     todosUl.innerHTML = "";
-
+    /* 
     for (let i = 0; i < todoList.todos.length; i++) {
       let todoLi = document.createElement("li");
       let todo = todoList.todos[i];
@@ -118,7 +130,26 @@ let view = {
       todoLi.textContent = todoTextWithCompletion;
       todoLi.appendChild(this.createDeleteButton());
       todosUl.appendChild(todoLi);
-    }
+    } */
+
+    /*this refers to the view object
+      forEach(callback, this)  */
+
+    todoList.todos.forEach(function(todo, position) {
+      let todoLi = document.createElement("li");
+      let todoTextWithCompletion = "";
+
+      if (todo.completed === true) {
+        todoTextWithCompletion = "(x) " + todo.todoText;
+      } else {
+        todoTextWithCompletion = "( ) " + todo.todoText;
+      }
+
+      todoLi.id = position;
+      todoLi.textContent = todoTextWithCompletion;
+      todoLi.appendChild(this.createDeleteButton());
+      todosUl.appendChild(todoLi);
+    }, this);
   },
   createDeleteButton: function() {
     let deleteButton = document.createElement("button");
