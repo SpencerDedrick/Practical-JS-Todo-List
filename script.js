@@ -153,7 +153,7 @@ let view = {
   },
   createDeleteButton: function() {
     let deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
+    deleteButton.innerHTML = `X`;
     deleteButton.className = "deleteButton";
     return deleteButton;
   },
@@ -163,6 +163,13 @@ let view = {
       let elementClicked = event.target;
       if (elementClicked.className === "deleteButton") {
         handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
+      }
+    });
+
+    let addTodoTextInput = document.getElementById("addTodoTextInput");
+    addTodoTextInput.addEventListener("keydown", function(e) {
+      if (e.keyCode === 13) {
+        handlers.addTodo();
       }
     });
   }

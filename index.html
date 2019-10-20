@@ -8,20 +8,22 @@
     <title>Practical JS Todo List</title>
   </head>
   <body>
-    <h1>Todo List</h1>
-    <!-- <h3>*Check Console*</h3> -->
-    <!--    <button id="displayTodosButton">Display Todos</button>
-    <button id="toggleAllButton">Toggle All</button> -->
+    <header>
+      <h1>todos</h1>
+      <div>
+        <input
+          type="text"
+          id="addTodoTextInput"
+          placeholder="What needs to be done?"
+        />
+        <div>
+          <ul></ul>
+        </div>
+      </div>
+    </header>
     <div>
-      <!-- <button onclick="handlers.displayTodos()">Display Todos</button> -->
       <button onclick="handlers.toggleAll()">Toggle All</button>
     </div>
-
-    <div>
-      <button onclick="handlers.addTodo()">Add</button>
-      <input id="addTodoTextInput" type="text" />
-    </div>
-
     <div>
       <button onclick="handlers.changeTodo()">Change Todo</button>
       <input id="changeTodoPositionInput" type="number" />
@@ -33,8 +35,10 @@
       <input id="toggleCompletedPositionInput" type="number" />
     </div>
 
-    <ul></ul>
-
+    <script
+      src="https://kit.fontawesome.com/c5da040612.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="script.js"></script>
   </body>
 </html>
