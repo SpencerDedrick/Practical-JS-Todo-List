@@ -2,67 +2,35 @@
 
 let todoList = {
   todos: [],
-  /*  displayTodos: function() {
-    if (this.todos.length === 0) {
-      console.log("Your todo list is empty!");
-    } else {
-      console.log("My Todos: ");
-      for (let i = 0; i < this.todos.length; i++) {
-        if (this.todos[i].completed === true) {
-          console.log("(x) " + this.todos[i].todoText);
-        } else {
-          console.log("( ) " + this.todos[i].todoText);
-        }
-      }
-    }
-  }, */
   addTodo: function(todoText) {
     this.todos.push({
       todoText: todoText,
       completed: false
     });
-    /* this.displayTodos(); */
   },
   changeTodo: function(position, todoText) {
     this.todos[position].todoText = todoText;
-    /* this.displayTodos(); */
   },
   deleteTodo: function(position) {
     this.todos.splice(position, 1);
-    /* this.displayTodos(); */
   },
   toggleCompleted: function(position) {
     let todo = this.todos[position];
     todo.completed = !todo.completed;
-    /* this.displayTodos(); */
   },
   toggleAll: function() {
     let totalTodos = this.todos.length;
     let completedTodos = 0;
-
-    /* for (let i = 0; i < totalTodos; i++) {
-      if (this.todos[i].completed === true) {
-        completedTodos++;
-      }
-    } */
-
     this.todos.forEach(function(todo) {
       if (todo.completed === true) {
         completedTodos++;
       }
     });
-
     if (completedTodos === totalTodos) {
-      /*       for (let i = 0; i < totalTodos; i++) {
-        this.todos[i].completed = false;
-      } */
       this.todos.forEach(function(todo) {
         todo.completed = false;
       });
     } else {
-      /*       for (let i = 0; i < totalTodos; i++) {
-        this.todos[i].completed = true;
-      } */
       this.todos.forEach(function(todo) {
         todo.completed = true;
       });
@@ -95,12 +63,8 @@ let handlers = {
     todoList.deleteTodo(position);
     view.displayTodos();
   },
-  toggleCompleted: function() {
-    let toggleCompletedPositionInput = document.getElementById(
-      "toggleCompletedPositionInput"
-    );
-    todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
-    toggleCompletedPositionInput.value = "";
+  toggleCompleted: function(position) {
+    todoList.toggleCompleted(position);
     view.displayTodos();
   },
   toggleAll: function() {
@@ -114,41 +78,22 @@ let view = {
   displayTodos: function() {
     let todosUl = document.querySelector("ul");
     todosUl.innerHTML = "";
-    /* 
-    for (let i = 0; i < todoList.todos.length; i++) {
-      let todoLi = document.createElement("li");
-      let todo = todoList.todos[i];
-      let todoTextWithCompletion = "";
-
-      if (todoList.todos[i].completed === true) {
-        todoTextWithCompletion = "(x) " + todo.todoText;
-      } else {
-        todoTextWithCompletion = "( ) " + todo.todoText;
-      }
-
-      todoLi.id = i;
-      todoLi.textContent = todoTextWithCompletion;
-      todoLi.appendChild(this.createDeleteButton());
-      todosUl.appendChild(todoLi);
-    } */
-
-    /*this refers to the view object
-      forEach(callback, this)  */
-
     todoList.todos.forEach(function(todo, position) {
       let todoLi = document.createElement("li");
-      let todoTextWithCompletion = "";
-
+      let todoTextWithCompletion = this.createTextDiv("");
       if (todo.completed === true) {
-        todoTextWithCompletion = "(x) " + todo.todoText;
+        todoTextWithCompletion.innerHTML = todo.todoText;
+        todoTextWithCompletion.classList.add("strikeThrough");
       } else {
-        todoTextWithCompletion = "( ) " + todo.todoText;
+        todoTextWithCompletion.innerHTML = todo.todoText;
+        todoTextWithCompletion.classList.remove("strikeThrough");
       }
-
       todoLi.id = position;
-      todoLi.textContent = todoTextWithCompletion;
+      todoLi.appendChild(this.createCheckButton(todo.completed));
+      todoLi.appendChild(todoTextWithCompletion);
       todoLi.appendChild(this.createDeleteButton());
       todosUl.appendChild(todoLi);
+      this.addDoubleClick();
     }, this);
   },
   createDeleteButton: function() {
@@ -157,12 +102,61 @@ let view = {
     deleteButton.className = "deleteButton";
     return deleteButton;
   },
+  createCheckButton: function(completed) {
+    let checkButton = document.createElement("button");
+    let checkMark = document.createElement("i");
+    checkMark.classList.add("checkMark");
+    if (completed === true) {
+      checkMark.classList.add("fas");
+      checkMark.classList.add("fa-check");
+    } else {
+      checkMark.classList.remove("fas");
+      checkMark.classList.remove("fa-check");
+    }
+    checkButton.appendChild(checkMark);
+    checkButton.className = "checkButton";
+    return checkButton;
+  },
+  createTextDiv: function(todoText) {
+    let textDiv = document.createElement("div");
+
+    textDiv.className = "todoText";
+    textDiv.innerHTML = todoText;
+    return textDiv;
+  },
+  createTextInput: function(todoText) {
+    let textInput = document.createElement("input");
+    textInput.className = "edit";
+    textInput.value = todoText;
+    return textInput;
+  },
+  /*  addChangeTodoTextInput: function() {
+    let changeTodoTextInput = document.createElement("input");
+    changeTodoTextInput.className = "changeTodoTextInput";
+    console.log(changeTodoTextInput);
+  }, */
+  addDoubleClick: function() {
+    let todoText = document.querySelector("li");
+    todoText.addEventListener("dblclick", function() {
+      this.childNodes[1].style.display = "none";
+      this.childNodes[2].style.display = "block";
+    });
+  },
+  /*   createChangeTodoTextInput: function() {
+    let changeTodoTextInput = document.createElement("input");
+    return changeTodoTextInput;
+  }, */
+
   setUpEventListeners: function() {
     let todosUl = document.querySelector("ul");
+
     todosUl.addEventListener("click", function(event) {
       let elementClicked = event.target;
       if (elementClicked.className === "deleteButton") {
         handlers.deleteTodo(parseInt(elementClicked.parentNode.id));
+      }
+      if (elementClicked.className === "checkButton") {
+        handlers.toggleCompleted(parseInt(elementClicked.parentNode.id));
       }
     });
 
